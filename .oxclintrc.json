@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "import",
+    "node",
+    "node",
+    "promise",
+    "typescript",
+    "unicorn"
+  ]
+}
