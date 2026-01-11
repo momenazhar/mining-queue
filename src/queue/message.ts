@@ -17,11 +17,13 @@ export async function updateQueueMessage(queue: Queue) {
         .setDescription(
           "**Members**\n" +
             queue.members
+              .slice(0, 50)
               .map(
                 (member, index) =>
                   `\`#${index + 1}\` <@${member.id}>: <t:${Math.round(member.joinedAt / 1000)}>`,
               )
-              .join("\n"),
+              .join("\n") +
+            (queue.members.length > 50 ? `and \`${queue.members.length - 50}\` more` : ""),
         )
         .toJSON(),
     ],
@@ -37,10 +39,14 @@ export async function updateQueueMessage(queue: Queue) {
             .setLabel("Leave")
             .setStyle(ButtonStyle.Primary),
           new ButtonBuilder()
-            .setCustomId(config.buttons.queueSellId)
+            .setCustomId(config.buttons.createSaleId)
             .setLabel("Sell")
             .setStyle(ButtonStyle.Primary)
             .setDisabled(queue.members.length === 0),
+          new ButtonBuilder()
+            .setCustomId(config.buttons.queuePositionId)
+            .setLabel("Position")
+            .setStyle(ButtonStyle.Primary),
         )
         .toJSON(),
     ],
@@ -48,24 +54,14 @@ export async function updateQueueMessage(queue: Queue) {
 
   if (queue.messageId) {
     try {
-      await editMessage(
-        process.env.DISCORD_QUEUE_CHANNEL_ID,
-        queue.messageId,
-        messagePayload,
-      );
+      await editMessage(process.env.DISCORD_QUEUE_CHANNEL_ID, queue.messageId, messagePayload);
     } catch {
-      const message = await sendMessage(
-        process.env.DISCORD_QUEUE_CHANNEL_ID,
-        messagePayload,
-      );
+      const message = await sendMessage(process.env.DISCORD_QUEUE_CHANNEL_ID, messagePayload);
       queue.messageId = message.id;
       await queue.write();
     }
   } else {
-    const message = await sendMessage(
-      process.env.DISCORD_QUEUE_CHANNEL_ID,
-      messagePayload,
-    );
+    const message = await sendMessage(process.env.DISCORD_QUEUE_CHANNEL_ID, messagePayload);
     queue.messageId = message.id;
     await queue.write();
   }

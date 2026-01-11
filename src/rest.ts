@@ -8,9 +8,7 @@ import {
   Routes,
 } from "discord.js";
 
-export const rest = new REST({ version: "10" }).setToken(
-  process.env.DISCORD_CLIENT_TOKEN,
-);
+export const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_CLIENT_TOKEN);
 
 export function sendMessage(
   channelId: string,
@@ -31,15 +29,20 @@ export function editMessage(
   }) as Promise<APIMessage>;
 }
 
-export function createThread(
-  channelId: string,
-  thread: RESTPostAPIChannelThreadsJSONBody,
-) {
+export function createThread(channelId: string, thread: RESTPostAPIChannelThreadsJSONBody) {
   return rest.post(Routes.threads(channelId), {
     body: thread,
   }) as Promise<APIThreadChannel>;
 }
 
-export function addThreadMembers(threadId: string, userId: string) {
+export function deleteChannel(channelId: string) {
+  return rest.delete(Routes.channel(channelId));
+}
+
+export function addThreadMember(threadId: string, userId: string) {
   return rest.put(Routes.threadMembers(threadId, userId));
+}
+
+export function removeThreadMember(threadId: string, userId: string) {
+  return rest.delete(Routes.threadMembers(threadId, userId));
 }

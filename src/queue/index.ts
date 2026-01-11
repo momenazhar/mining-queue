@@ -8,12 +8,10 @@ type QueueMember = {
 export class Queue {
   messageId: string | undefined;
   members: QueueMember[];
-  selling: string[];
 
   constructor() {
     this.messageId = undefined;
     this.members = [];
-    this.selling = [];
   }
 
   /**
@@ -38,8 +36,7 @@ export class Queue {
     return this.members.some((member) => member.id === id);
   }
 
-  sell(id: string, amount: number): QueueMember[] {
-    this.selling.push(id);
+  sell(amount: number): QueueMember[] {
     return this.members.splice(0, amount);
   }
 
@@ -51,7 +48,6 @@ export class Queue {
       const data = JSON.parse(contents || "{}");
       this.messageId = data.messageId;
       this.members = data.members ?? [];
-      this.selling = data.selling ?? [];
     } catch (error) {
       console.error("Failed to read queue. Creating new queue", error);
       await this.write();
@@ -65,7 +61,6 @@ export class Queue {
       JSON.stringify({
         messageId: this.messageId,
         members: this.members,
-        selling: this.selling,
       }),
     );
   }

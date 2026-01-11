@@ -1,11 +1,14 @@
 import { MessageFlags, type CacheType, type ChatInputCommandInteraction } from "discord.js";
-import { queue } from "../queue/index.ts";
 import { updateQueueMessage } from "../queue/message.ts";
+import { queue } from "../queue/index.ts";
 
-export async function sync(interaction: ChatInputCommandInteraction<CacheType>) {
+export async function reset(interaction: ChatInputCommandInteraction<CacheType>) {
+  queue.members = [];
+  await queue.write();
+
   return Promise.all([
     interaction.reply({
-      content: "Synced!",
+      content: "Reset!",
       flags: MessageFlags.Ephemeral,
     }),
     updateQueueMessage(queue),

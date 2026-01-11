@@ -9,8 +9,9 @@ import {
 } from "discord.js";
 import { queue } from "../queue/index.ts";
 import { config } from "../config.ts";
+import { selling } from "../selling/index.ts";
 
-export async function onSellClick(interaction: ButtonInteraction<CacheType>) {
+export async function onCreateSaleClick(interaction: ButtonInteraction<CacheType>) {
   if (queue.contains(interaction.user.id)) {
     return interaction.reply({
       content: "You can't sell if you are in the queue",
@@ -25,7 +26,7 @@ export async function onSellClick(interaction: ButtonInteraction<CacheType>) {
     });
   }
 
-  if (queue.selling.includes(interaction.user.id)) {
+  if (selling.containsSeller(interaction.user.id)) {
     return interaction.reply({
       content: "You can't sell since you are already selling",
       flags: MessageFlags.Ephemeral,
@@ -34,7 +35,7 @@ export async function onSellClick(interaction: ButtonInteraction<CacheType>) {
 
   return interaction.showModal(
     new ModalBuilder()
-      .setCustomId(config.modals.queueSellId)
+      .setCustomId(config.modals.createSaleId)
       .setTitle("Sell")
       .addLabelComponents(
         new LabelBuilder()
@@ -46,15 +47,9 @@ export async function onSellClick(interaction: ButtonInteraction<CacheType>) {
               .setMaxValues(1)
               .setRequired(true)
               .setOptions(
-                new StringSelectMenuOptionBuilder()
-                  .setLabel("One")
-                  .setValue("1"),
-                new StringSelectMenuOptionBuilder()
-                  .setLabel("Two")
-                  .setValue("2"),
-                new StringSelectMenuOptionBuilder()
-                  .setLabel("Three")
-                  .setValue("3"),
+                new StringSelectMenuOptionBuilder().setLabel("One").setValue("1"),
+                new StringSelectMenuOptionBuilder().setLabel("Two").setValue("2"),
+                new StringSelectMenuOptionBuilder().setLabel("Three").setValue("3"),
               ),
           ),
       ),
