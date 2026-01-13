@@ -37,11 +37,11 @@ export async function updateSaleMessage(sale: Sale) {
             new ButtonBuilder()
               .setLabel("Pull")
               .setStyle(ButtonStyle.Primary)
-              .setEmoji(config.emojis.close)
+              .setEmoji(config.emojis.pull)
               .setCustomId(config.buttons.pullQueueId),
             new ButtonBuilder()
               .setLabel("Leave")
-              .setStyle(ButtonStyle.Secondary)
+              .setStyle(ButtonStyle.Danger)
               .setEmoji(config.emojis.leave)
               .setCustomId(config.buttons.leaveSaleId),
             new ButtonBuilder()
@@ -56,7 +56,7 @@ export async function updateSaleMessage(sale: Sale) {
         )
         .addTextDisplayComponents(
           new TextDisplayBuilder().setContent(
-            `-# Mining Cult - <@${process.env.DISCORD_CLIENT_CREATOR_ID}>`,
+            `-# Mining Cult • <@${process.env.DISCORD_CLIENT_CREATOR_ID}>`,
           ),
         )
         .toJSON(),

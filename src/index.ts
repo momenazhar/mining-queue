@@ -18,14 +18,14 @@ import { reset } from "./commands/reset.ts";
 import { queue } from "./queue/index.ts";
 import { updateQueueMessage } from "./queue/message.ts";
 import { selling } from "./selling/index.ts";
-import { sendMessage } from "./rest.ts";
+import { deleteChannel, sendMessage } from "./rest.ts";
 import { leaveSale, onLeaveSaleClick } from "./buttons/leave-sale.ts";
 import { onCloseSaleClick } from "./buttons/close-sale.ts";
 import { onPositionQueueClick } from "./buttons/position-queue.ts";
 import { onPullQueueClick } from "./buttons/pull-queue.ts";
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
   makeCache: Options.cacheWithLimits({}),
 });
 
@@ -34,7 +34,9 @@ client.on(Events.ClientReady, (readyClient) => {
 });
 
 type ButtonHandler = (interaction: ButtonInteraction<CacheType>) => void;
-type CommandHandler = (interaction: ChatInputCommandInteraction<CacheType>) => void;
+type CommandHandler = (
+  interaction: ChatInputCommandInteraction<CacheType>,
+) => void;
 type ModalHandler = (interaction: ModalSubmitInteraction<CacheType>) => void;
 
 const buttons: Record<string, ButtonHandler> = {
@@ -78,18 +80,27 @@ client.on(Events.GuildMemberRemove, async (member) => {
   }
 
   if (selling.containsSeller(member.id)) {
-    const sale = selling.sales.find((sale) => sale.seller.id === member.id)!;
-
-    await sendMessage(sale.threadId, {
-      content: `<@${process.env.DISCORD_MOD_ROLE_ID}> the seller has left the server!`,
-    });
+    for (const sale of selling.sales.filter(
+      (sale) => sale.seller.id === member.id,
+    )) {
+      selling.deleteSale(sale.seller.id);
+      await selling.write();
+      await deleteChannel(sale.threadId);
+    }
   }
 
   if (selling.containsMember(member.id)) {
-    const sale = selling.sales.find((sale) => sale.memberIds.includes(member.id))!;
-
-    await leaveSale(sale, member.id);
+    for (const sale of selling.sales.filter((sale) =>
+      sale.memberIds.includes(member.id),
+    )) {
+      await leaveSale(sale, member.id);
+    }
   }
+});
+
+client.on(Events.ThreadDelete, async (thread) => {
+  selling.sales = selling.sales.filter((sale) => sale.threadId !== thread.id);
+  await selling.write();
 });
 
 client.login(process.env.DISCORD_CLIENT_TOKEN);

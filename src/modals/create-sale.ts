@@ -1,30 +1,28 @@
-import { MessageFlags, ChannelType, type CacheType, type ModalSubmitInteraction } from "discord.js";
+import { ChannelType, MessageFlags, type CacheType, type ModalSubmitInteraction } from "discord.js";
 import { queue } from "../queue/index.ts";
 import { updateQueueMessage } from "../queue/message.ts";
 import { addThreadMember, createThread } from "../rest.ts";
 import { selling } from "../selling/index.ts";
 import { updateSaleMessage } from "../selling/message.ts";
+import { messages } from "../messages.ts";
+import { embedReply } from "../embeds.ts";
 
 export async function onCreateSaleSubmit(interaction: ModalSubmitInteraction<CacheType>) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
   if (queue.contains(interaction.user.id)) {
-    return interaction.reply({
-      content: "You can't sell if you are in the queue",
-      flags: MessageFlags.Ephemeral,
-    });
+    await interaction.editReply(embedReply("error", messages.modals.cannotSellInQueue));
+    return;
   }
 
   if (queue.members.length === 0) {
-    return interaction.reply({
-      content: "You can't sell since the queue is empty",
-      flags: MessageFlags.Ephemeral,
-    });
+    await interaction.editReply(embedReply("error", messages.modals.emptyQueue));
+    return;
   }
 
   if (selling.containsSeller(interaction.user.id)) {
-    return interaction.reply({
-      content: "You can't sell since you are already selling",
-      flags: MessageFlags.Ephemeral,
-    });
+    await interaction.editReply(embedReply("error", messages.modals.alreadySelling));
+    return;
   }
 
   const [value] = interaction.fields.getStringSelectValues("members");
@@ -55,8 +53,5 @@ export async function onCreateSaleSubmit(interaction: ModalSubmitInteraction<Cac
 
   await updateSaleMessage(sale);
 
-  return interaction.reply({
-    content: `Created a thread <#${thread.id}>`,
-    flags: MessageFlags.Ephemeral,
-  });
+  await interaction.editReply(embedReply("info", messages.modals.createThread(thread.id)));
 }

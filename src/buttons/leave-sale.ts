@@ -2,33 +2,27 @@ import { MessageFlags, type ButtonInteraction, type CacheType } from "discord.js
 import { selling, type Sale } from "../selling/index.ts";
 import { deleteChannel, removeThreadMember } from "../rest.ts";
 import { updateSaleMessage } from "../selling/message.ts";
+import { embedReply } from "../embeds.ts";
+import { messages } from "../messages.ts";
 
 export async function onLeaveSaleClick(interaction: ButtonInteraction<CacheType>) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
   const sale = selling.getSaleByThreadId(interaction.channelId);
 
   if (!sale) {
-    await interaction.reply({
-      content: "This thread is not assiocated with a sale",
-      flags: MessageFlags.Ephemeral,
-    });
-
+    await interaction.editReply(embedReply("error", messages.leaveSale.threadNoSale));
     return;
   }
 
   if (sale.memberIds.every((id) => id !== interaction.user.id)) {
-    await interaction.reply({
-      content: "Only members of the sale can leave",
-      flags: MessageFlags.Ephemeral,
-    });
-
+    await interaction.editReply(embedReply("error", messages.leaveSale.onlyMembersCanLeave));
     return;
   }
 
   await leaveSale(sale, interaction.user.id, async (deleted) => {
-    await interaction.reply({
-      content: deleted ? "Deleting sale since all members left" : "Leaving...",
-      flags: MessageFlags.Ephemeral,
-    });
+    await interaction.editReply(
+      embedReply("error", deleted ? messages.leaveSale.allMembersLeft : messages.leaveSale.leaving),
+    );
   });
 }
 

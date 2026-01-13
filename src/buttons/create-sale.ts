@@ -1,6 +1,5 @@
 import {
   LabelBuilder,
-  MessageFlags,
   ModalBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
@@ -10,27 +9,28 @@ import {
 import { queue } from "../queue/index.ts";
 import { config } from "../config.ts";
 import { selling } from "../selling/index.ts";
+import { embedReply } from "../embeds.ts";
+import { messages } from "../messages.ts";
 
-export async function onCreateSaleClick(interaction: ButtonInteraction<CacheType>) {
+export async function onCreateSaleClick(
+  interaction: ButtonInteraction<CacheType>,
+) {
   if (queue.contains(interaction.user.id)) {
-    return interaction.reply({
-      content: "You can't sell if you are in the queue",
-      flags: MessageFlags.Ephemeral,
-    });
+    return interaction.reply(
+      embedReply("error", messages.createSale.cannotSellInQueue),
+    );
   }
 
   if (queue.members.length === 0) {
-    return interaction.reply({
-      content: "You can't sell since the queue is empty",
-      flags: MessageFlags.Ephemeral,
-    });
+    return interaction.reply(
+      embedReply("error", messages.createSale.emptyQueue),
+    );
   }
 
   if (selling.containsSeller(interaction.user.id)) {
-    return interaction.reply({
-      content: "You can't sell since you are already selling",
-      flags: MessageFlags.Ephemeral,
-    });
+    return interaction.reply(
+      embedReply("error", messages.createSale.alreadySelling),
+    );
   }
 
   return interaction.showModal(
@@ -39,7 +39,7 @@ export async function onCreateSaleClick(interaction: ButtonInteraction<CacheType
       .setTitle("Sell")
       .addLabelComponents(
         new LabelBuilder()
-          .setLabel("How many people do you want to take?")
+          .setLabel("How many Golden Dragon Eggs are there?")
           .setStringSelectMenuComponent(
             new StringSelectMenuBuilder()
               .setCustomId("members")
@@ -47,9 +47,15 @@ export async function onCreateSaleClick(interaction: ButtonInteraction<CacheType
               .setMaxValues(1)
               .setRequired(true)
               .setOptions(
-                new StringSelectMenuOptionBuilder().setLabel("One").setValue("1"),
-                new StringSelectMenuOptionBuilder().setLabel("Two").setValue("2"),
-                new StringSelectMenuOptionBuilder().setLabel("Three").setValue("3"),
+                new StringSelectMenuOptionBuilder()
+                  .setLabel("One")
+                  .setValue("1"),
+                new StringSelectMenuOptionBuilder()
+                  .setLabel("Two")
+                  .setValue("2"),
+                new StringSelectMenuOptionBuilder()
+                  .setLabel("Three")
+                  .setValue("3"),
               ),
           ),
       ),
