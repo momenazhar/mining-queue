@@ -5,7 +5,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "post-commands": "node --env-file=.env ./src/post-commands.ts",
-    "start": "node --env-file=.env ./src/index.ts",
+    "dev": "node --env-file=.env ./src/index.ts",
+    "start": "node ./src/index.ts",
     "fmt": "oxfmt --check",
     "fmt:fix": "oxfmt",
     "lint": "oxlint",
