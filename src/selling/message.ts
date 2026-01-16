@@ -18,6 +18,7 @@ export async function updateSaleMessage(sale: Sale) {
   const messagePayload = {
     allowed_mentions: { parse: [] },
     flags: MessageFlags.IsComponentsV2,
+    content: "<@&1458558083402825869>",
     components: [
       new ContainerBuilder()
         .addTextDisplayComponents(
@@ -26,12 +27,10 @@ export async function updateSaleMessage(sale: Sale) {
               `# ${sale.seller.displayName}'s New Sale`,
               `- Seller: <@${sale.seller.id}>`,
               `- Members: ${sale.memberIds.map((id) => `<@${id}>`).join(", ")}`,
-            ].join("\n"),
-          ),
+            ].join("\n")
+          )
         )
-        .addSeparatorComponents(
-          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
-        )
+        .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addActionRowComponents(
           new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
             new ButtonBuilder()
@@ -48,16 +47,12 @@ export async function updateSaleMessage(sale: Sale) {
               .setLabel("Close")
               .setStyle(ButtonStyle.Danger)
               .setEmoji(config.emojis.close)
-              .setCustomId(config.buttons.closeSaleId),
-          ),
+              .setCustomId(config.buttons.closeSaleId)
+          )
         )
-        .addSeparatorComponents(
-          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
-        )
+        .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            `-# Mining Cult • <@${process.env.DISCORD_CLIENT_CREATOR_ID}>`,
-          ),
+          new TextDisplayBuilder().setContent(`-# Mining Cult • <@${process.env.DISCORD_CLIENT_CREATOR_ID}>`)
         )
         .toJSON(),
     ],

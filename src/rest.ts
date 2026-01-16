@@ -10,20 +10,13 @@ import {
 
 export const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_CLIENT_TOKEN);
 
-export function sendMessage(
-  channelId: string,
-  message: RESTPostAPIChannelMessageJSONBody,
-): Promise<APIMessage> {
+export function sendMessage(channelId: string, message: RESTPostAPIChannelMessageJSONBody): Promise<APIMessage> {
   return rest.post(Routes.channelMessages(channelId), {
     body: message,
   }) as Promise<APIMessage>;
 }
 
-export function editMessage(
-  channelId: string,
-  messageId: string,
-  message: RESTPatchAPIChannelMessageJSONBody,
-) {
+export function editMessage(channelId: string, messageId: string, message: RESTPatchAPIChannelMessageJSONBody) {
   return rest.patch(Routes.channelMessage(channelId, messageId), {
     body: message,
   }) as Promise<APIMessage>;
@@ -35,8 +28,18 @@ export function createThread(channelId: string, thread: RESTPostAPIChannelThread
   }) as Promise<APIThreadChannel>;
 }
 
+// export function deleteChannel(channelId: string) {
+//   return rest.delete(Routes.channel(channelId));
+// }
+
+// TODO: Ensure proper logic to lock threads instead of deleting them
 export function deleteChannel(channelId: string) {
-  return rest.delete(Routes.channel(channelId));
+  return rest.patch(Routes.channel(channelId), {
+    body: {
+      name: `closed-${channelId}`,
+      locked: true,
+    },
+  });
 }
 
 export function addThreadMember(threadId: string, userId: string) {
