@@ -17,8 +17,7 @@ import { editMessage, sendMessage } from "../rest.ts";
 export async function updateSaleMessage(sale: Sale) {
   const messagePayload = {
     allowed_mentions: {
-      parse: ["roles"],
-      roles: ["1458558083402825869"],
+      parse: [],
     },
     flags: MessageFlags.IsComponentsV2,
     components: [
@@ -32,7 +31,6 @@ export async function updateSaleMessage(sale: Sale) {
             ].join("\n"),
           ),
         )
-        .addTextDisplayComponents(new TextDisplayBuilder().setContent("<@&1458558083402825869>"))
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addActionRowComponents(
           new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(

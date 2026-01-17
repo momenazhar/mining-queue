@@ -1,7 +1,7 @@
 import { ChannelType, MessageFlags, type CacheType, type ModalSubmitInteraction } from "discord.js";
 import { queue } from "../queue/index.ts";
 import { updateQueueMessage } from "../queue/message.ts";
-import { addThreadMember, createThread } from "../rest.ts";
+import { addThreadMember, createThread, sendMessage } from "../rest.ts";
 import { selling } from "../selling/index.ts";
 import { updateSaleMessage } from "../selling/message.ts";
 import { messages } from "../messages.ts";
@@ -52,6 +52,8 @@ export async function onCreateSaleSubmit(interaction: ModalSubmitInteraction<Cac
   ]);
 
   await updateSaleMessage(sale);
+  // TODO: ping oncall in embed instead of separate msg
+  await sendMessage(thread.id, { content: `<@&${process.env.DISCORD_ONCALL_ROLE_ID}>` });
 
   await interaction.editReply(embedReply("info", messages.modals.createThread(thread.id)));
 }
