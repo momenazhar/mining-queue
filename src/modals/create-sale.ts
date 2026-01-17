@@ -52,8 +52,6 @@ export async function onCreateSaleSubmit(interaction: ModalSubmitInteraction<Cac
   ]);
 
   await updateSaleMessage(sale);
-  // TODO: ping oncall in embed instead of separate msg
-  await sendMessage(thread.id, { content: `<@&${process.env.DISCORD_ONCALL_ROLE_ID}>` });
 
   await interaction.editReply(embedReply("info", messages.modals.createThread(thread.id)));
 }

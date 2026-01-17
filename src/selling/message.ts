@@ -17,7 +17,7 @@ import { editMessage, sendMessage } from "../rest.ts";
 export async function updateSaleMessage(sale: Sale) {
   const messagePayload = {
     allowed_mentions: {
-      parse: [],
+      roles: [process.env.DISCORD_ONCALL_ROLE_ID],
     },
     flags: MessageFlags.IsComponentsV2,
     components: [
@@ -31,6 +31,7 @@ export async function updateSaleMessage(sale: Sale) {
             ].join("\n"),
           ),
         )
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(`<@&${process.env.DISCORD_ONCALL_ROLE_ID}>`))
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addActionRowComponents(
           new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
