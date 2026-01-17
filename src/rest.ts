@@ -38,6 +38,7 @@ export function deleteChannel(channelId: string) {
     body: {
       name: `closed-${channelId}`,
       locked: true,
+      archived: true,
     },
   });
 }
