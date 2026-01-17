@@ -2,7 +2,7 @@ export const messages = {
   closeSale: {
     threadNoSale: "This thread is not assiocated with a sale",
     cannotClose: "Only moderators or the seller can close a sale",
-    threadDelete: "Deleting...",
+    threadDelete: "Closing...",
   },
   createSale: {
     cannotSellInQueue: "You can't sell if you are in the queue",
