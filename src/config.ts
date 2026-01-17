@@ -14,8 +14,7 @@ export const config = {
   commands: {
     sync: {
       name: "sync",
-      description:
-        "Refresh the bot's interactions, and re-send the queue message if it was deleted",
+      description: "Refresh the bot's interactions, and re-send the queue message if it was deleted",
     },
     reset: {
       name: "reset",

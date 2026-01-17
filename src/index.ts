@@ -18,7 +18,7 @@ import { reset } from "./commands/reset.ts";
 import { queue } from "./queue/index.ts";
 import { updateQueueMessage } from "./queue/message.ts";
 import { selling } from "./selling/index.ts";
-import { deleteChannel, sendMessage } from "./rest.ts";
+import { deleteChannel } from "./rest.ts";
 import { leaveSale, onLeaveSaleClick } from "./buttons/leave-sale.ts";
 import { onCloseSaleClick } from "./buttons/close-sale.ts";
 import { onPositionQueueClick } from "./buttons/position-queue.ts";
@@ -34,9 +34,7 @@ client.on(Events.ClientReady, (readyClient) => {
 });
 
 type ButtonHandler = (interaction: ButtonInteraction<CacheType>) => void;
-type CommandHandler = (
-  interaction: ChatInputCommandInteraction<CacheType>,
-) => void;
+type CommandHandler = (interaction: ChatInputCommandInteraction<CacheType>) => void;
 type ModalHandler = (interaction: ModalSubmitInteraction<CacheType>) => void;
 
 const buttons: Record<string, ButtonHandler> = {
@@ -80,9 +78,7 @@ client.on(Events.GuildMemberRemove, async (member) => {
   }
 
   if (selling.containsSeller(member.id)) {
-    for (const sale of selling.sales.filter(
-      (sale) => sale.seller.id === member.id,
-    )) {
+    for (const sale of selling.sales.filter((sale) => sale.seller.id === member.id)) {
       selling.deleteSale(sale.seller.id);
       await selling.write();
       await deleteChannel(sale.threadId);
@@ -90,9 +86,7 @@ client.on(Events.GuildMemberRemove, async (member) => {
   }
 
   if (selling.containsMember(member.id)) {
-    for (const sale of selling.sales.filter((sale) =>
-      sale.memberIds.includes(member.id),
-    )) {
+    for (const sale of selling.sales.filter((sale) => sale.memberIds.includes(member.id))) {
       await leaveSale(sale, member.id);
     }
   }
