@@ -17,7 +17,7 @@ import { editMessage, sendMessage } from "../rest.ts";
 export async function updateSaleMessage(sale: Sale) {
   const messagePayload = {
     allowed_mentions: {
-      roles: ["1458558083402825869"],
+      parse: ["roles"],
     },
     flags: MessageFlags.IsComponentsV2,
     components: [
