@@ -13,6 +13,7 @@ import {
 import type { Queue } from "./index.ts";
 import { config } from "../config.ts";
 import { editMessage, sendMessage } from "../rest.ts";
+import { readFile } from "node:fs/promises";
 
 export async function updateQueueMessage(queue: Queue) {
   const messagePayload = {
@@ -85,7 +86,11 @@ export async function updateQueueMessage(queue: Queue) {
   }
   try {
     await sendMessage(process.env.DISCORD_LOGS_CHANNEL_ID, {
-      content: JSON.stringify(queue.read()),
+      content: JSON.stringify(
+        await readFile("./data/queue.json", {
+          encoding: "utf8",
+        }),
+      ),
     });
   } catch (error) {
     console.error("Failed to send queue state to logs channel:", error);

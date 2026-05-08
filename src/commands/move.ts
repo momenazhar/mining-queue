@@ -6,7 +6,7 @@ import { embedReply } from "../embeds.ts";
 import { messages } from "../messages.ts";
 
 export async function move(interaction: ChatInputCommandInteraction<CacheType>) {
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  await interaction.deferReply();
 
   const user = interaction.options.getUser("user", true);
   const position = interaction.options.getInteger("position", true);
