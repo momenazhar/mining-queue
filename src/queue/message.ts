@@ -93,12 +93,12 @@ export async function updateQueueMessage(queue: Queue) {
 
     let formattedList = "";
 
-    formattedList += `Golden Dragon Queue Log\n\n`;
+    formattedList += `## Golden Dragon Queue Log\n`;
 
     if (!data.members?.length) {
       formattedList += "The queue is empty";
     } else {
-      formattedList += `- Queue Length: ${data.members.length}\n\n`;
+      formattedList += `Queue Length: ${data.members.length}\n\n`;
 
       formattedList += data.members
         .map(
@@ -107,7 +107,7 @@ export async function updateQueueMessage(queue: Queue) {
         )
         .join("\n");
 
-      formattedList += `\n-# Logged at: (<t:${Date.now() / 1000}:F>)`;
+      formattedList += `\n\n-# **Logged at: (<t:${Math.round(Date.now() / 1000)}:F>)**`;
     }
 
     await sendMessage(process.env.DISCORD_LOGS_CHANNEL_ID, {
