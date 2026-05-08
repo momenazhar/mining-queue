@@ -85,12 +85,33 @@ export async function updateQueueMessage(queue: Queue) {
     await queue.write();
   }
   try {
+    const queueList = await readFile("./data/queue.json", {
+      encoding: "utf8",
+    });
+
+    const data = JSON.parse(queueList || "{}");
+
+    let formattedList = "";
+
+    formattedList += `Golden Dragon Queue Log\n\n`;
+
+    if (!data.members?.length) {
+      formattedList += "The queue is empty";
+    } else {
+      formattedList += `- Queue Length: ${data.members.length}\n\n`;
+
+      formattedList += data.members
+        .map(
+          (member: { id: string; joinedAt: number }, index: number) =>
+            `\`#${index + 1}\` <@${member.id}> (\`${member.id}\`): <t:${Math.round(member.joinedAt / 1000)}:t>`,
+        )
+        .join("\n");
+
+      formattedList += `\n-# Logged at: (<t:${Date.now() / 1000}:F>)`;
+    }
+
     await sendMessage(process.env.DISCORD_LOGS_CHANNEL_ID, {
-      content: JSON.stringify(
-        await readFile("./data/queue.json", {
-          encoding: "utf8",
-        }),
-      ),
+      content: formattedList,
     });
   } catch (error) {
     console.error("Failed to send queue state to logs channel:", error);

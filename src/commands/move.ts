@@ -1,4 +1,4 @@
-import { MessageFlags, type CacheType, type ChatInputCommandInteraction } from "discord.js";
+import { type CacheType, type ChatInputCommandInteraction } from "discord.js";
 
 import { queue } from "../queue/index.ts";
 import { updateQueueMessage } from "../queue/message.ts";
