@@ -103,7 +103,7 @@ export async function updateQueueMessage(queue: Queue) {
       formattedList += data.members
         .map(
           (member: { id: string; joinedAt: number }, index: number) =>
-            `\`#${index + 1}\` <@${member.id}> (\`${member.id}\`): <t:${Math.round(member.joinedAt / 1000)}:t>`,
+            `\`#${index + 1}\` <@${member.id}>: <t:${Math.round(member.joinedAt / 1000)}:t>`,
         )
         .join("\n");
 
