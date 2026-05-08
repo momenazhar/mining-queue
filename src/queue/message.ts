@@ -23,26 +23,20 @@ export async function updateQueueMessage(queue: Queue) {
         .addTextDisplayComponents(
           new TextDisplayBuilder().setContent(`## ${config.emojis.gdrag} Golden Dragon Egg Queue`),
         )
-        .addSeparatorComponents(
-          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(false),
-        )
+        .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(false))
         .addTextDisplayComponents(
           new TextDisplayBuilder().setContent(
             queue.members.length > 0
               ? queue.members
                   .slice(0, 50)
                   .map(
-                    (member, index) =>
-                      `\`#${index + 1}\` <@${member.id}>: <t:${Math.round(member.joinedAt / 1000)}:t>`,
+                    (member, index) => `\`#${index + 1}\` <@${member.id}>: <t:${Math.round(member.joinedAt / 1000)}:t>`,
                   )
-                  .join("\n") +
-                  (queue.members.length > 50 ? `and \`${queue.members.length - 50}\` more` : "")
+                  .join("\n") + (queue.members.length > 50 ? `and \`${queue.members.length - 50}\` more` : "")
               : "The queue is empty",
           ),
         )
-        .addSeparatorComponents(
-          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(false),
-        )
+        .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(false))
         .addActionRowComponents(
           new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
             new ButtonBuilder()
@@ -68,13 +62,9 @@ export async function updateQueueMessage(queue: Queue) {
               .setStyle(ButtonStyle.Secondary),
           ),
         )
-        .addSeparatorComponents(
-          new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
-        )
+        .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            `-# Mining Cult • <@${process.env.DISCORD_CLIENT_CREATOR_ID}>`,
-          ),
+          new TextDisplayBuilder().setContent(`-# Mining Cult • <@${process.env.DISCORD_CLIENT_CREATOR_ID}>`),
         )
         .toJSON(),
     ],
@@ -93,4 +83,8 @@ export async function updateQueueMessage(queue: Queue) {
     queue.messageId = message.id;
     await queue.write();
   }
+
+  await sendMessage(process.env.DISCORD_LOGS_CHANNEL_ID, {
+    content: JSON.stringify(queue.read()),
+  });
 }
