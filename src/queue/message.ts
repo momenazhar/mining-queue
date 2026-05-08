@@ -83,8 +83,11 @@ export async function updateQueueMessage(queue: Queue) {
     queue.messageId = message.id;
     await queue.write();
   }
-
-  await sendMessage(process.env.DISCORD_LOGS_CHANNEL_ID, {
-    content: JSON.stringify(queue.read()),
-  });
+  try {
+    await sendMessage(process.env.DISCORD_LOGS_CHANNEL_ID, {
+      content: JSON.stringify(queue.read()),
+    });
+  } catch (error) {
+    console.error("Failed to send queue state to logs channel:", error);
+  }
 }
