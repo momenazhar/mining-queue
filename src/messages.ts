@@ -28,6 +28,10 @@ export const messages = {
     notInQueue: "You are not in the queue",
     position: (position: number) => `You are position \`#${position}\` in the queue`,
   },
+  moveQueue: {
+    notInQueue: "That user is not in queue.",
+    moved: (userId: string, position: number) => `Moved <@${userId}> to position #${position}`,
+  },
   pullQueue: {
     threadNoSale: "This thread is not assiocated with a sale",
     noPullEmptyQueue: "You can't pull since the queue is empty",

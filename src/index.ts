@@ -23,6 +23,7 @@ import { leaveSale, onLeaveSaleClick } from "./buttons/leave-sale.ts";
 import { onCloseSaleClick } from "./buttons/close-sale.ts";
 import { onPositionQueueClick } from "./buttons/position-queue.ts";
 import { onPullQueueClick } from "./buttons/pull-queue.ts";
+import { move } from "./commands/move.ts";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
@@ -50,6 +51,7 @@ const buttons: Record<string, ButtonHandler> = {
 const commands: Record<string, CommandHandler> = {
   [config.commands.sync.name]: sync,
   [config.commands.reset.name]: reset,
+  [config.commands.move.name]: move,
 };
 
 const modals: Record<string, ModalHandler> = {

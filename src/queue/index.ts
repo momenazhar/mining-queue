@@ -40,6 +40,24 @@ export class Queue {
     return this.members.splice(0, amount);
   }
 
+  move(id: string, position: number): boolean {
+    const currentIndex = this.members.findIndex(({ id: memberId }) => memberId === id);
+
+    if (currentIndex === -1) return false;
+
+    const member = this.members[currentIndex];
+
+    if (!member) return false;
+
+    this.members.splice(currentIndex, 1);
+
+    const clampedPosition = Math.max(0, Math.min(position, this.members.length));
+
+    this.members.splice(clampedPosition, 0, member);
+
+    return true;
+  }
+
   async read() {
     try {
       const contents = await readFile("./data/queue.json", {

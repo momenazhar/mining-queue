@@ -1,3 +1,5 @@
+import { ApplicationCommandOptionType } from "discord.js";
+
 export const config = {
   modals: {
     createSaleId: "create-sale",
@@ -19,6 +21,25 @@ export const config = {
     reset: {
       name: "reset",
       description: "Remove everyone from the queue",
+    },
+    move: {
+      name: "move",
+      description: "Move a person to a different position in the queue",
+      options: [
+        {
+          name: "user",
+          type: ApplicationCommandOptionType.User,
+          required: true,
+          description: "User to move",
+        },
+        {
+          name: "position",
+          type: ApplicationCommandOptionType.Integer,
+          required: true,
+          description: "New position to move to",
+          minValue: 1,
+        },
+      ],
     },
   },
   emojis: {
