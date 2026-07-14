@@ -9,6 +9,7 @@ declare global {
       DISCORD_ONCALL_ROLE_ID: string;
       DISCORD_CLIENT_CREATOR_ID: string;
       DISCORD_LOGS_CHANNEL_ID: string;
+      DISCORD_RESET_ROLE_ID: string;
     }
   }
 }
