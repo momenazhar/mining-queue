@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { config } from "../config.ts";
 
 export interface Seller {
   id: string;
@@ -14,9 +15,11 @@ export interface Sale {
 
 export class Selling {
   sales: Sale[];
+  cooldowns: Record<string, number>;
 
   constructor() {
     this.sales = [];
+    this.cooldowns = {};
   }
 
   containsSeller(sellerId: string) {
@@ -43,6 +46,13 @@ export class Selling {
 
   deleteSale(sellerId: string) {
     this.sales = this.sales.filter((s) => s.seller.id !== sellerId);
+    this.cooldowns[sellerId] = Date.now() + config.saleCooldownMs;
+  }
+
+  getCooldownRemaining(sellerId: string): number {
+    const until = this.cooldowns[sellerId];
+    if (!until) return 0;
+    return Math.max(0, until - Date.now());
   }
 
   async read() {
@@ -52,6 +62,7 @@ export class Selling {
       });
       const data = JSON.parse(contents || "{}");
       this.sales = data.sales ?? [];
+      this.cooldowns = data.cooldowns ?? {};
     } catch (error) {
       console.error("Failed to read selling. Creating new selling", error);
       await this.write();
@@ -60,7 +71,7 @@ export class Selling {
 
   async write() {
     await mkdir("./data", { recursive: true });
-    await writeFile("./data/selling.json", JSON.stringify({ sales: this.sales }));
+    await writeFile("./data/selling.json", JSON.stringify({ sales: this.sales, cooldowns: this.cooldowns }));
   }
 }
 

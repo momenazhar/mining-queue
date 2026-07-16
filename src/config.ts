@@ -51,4 +51,5 @@ export const config = {
     position: "<:position:1460715206522175610>",
     pull: "<:pull:1460717649922097274>",
   },
+  saleCooldownMs: 3 * 60 * 1000, // 3 minutes
 };

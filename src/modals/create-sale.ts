@@ -25,6 +25,12 @@ export async function onCreateSaleSubmit(interaction: ModalSubmitInteraction<Cac
     return;
   }
 
+  const cooldown = selling.getCooldownRemaining(interaction.user.id);
+  if (cooldown > 0) {
+    await interaction.editReply(embedReply("error", messages.modals.onCooldown(cooldown)));
+    return;
+  }
+
   const [value] = interaction.fields.getStringSelectValues("members");
   const amountOfMembers = parseInt(value!);
 

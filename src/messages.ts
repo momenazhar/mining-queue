@@ -8,6 +8,8 @@ export const messages = {
     cannotSellInQueue: "You can't sell if you are in the queue",
     emptyQueue: "You can't sell since the queue is empty",
     alreadySelling: "You can't sell since you are already selling",
+    onCooldown: (msRemaining: number) =>
+      `You're on cooldown. You can start a new sale <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
   },
   joinQueue: {
     alreadyInQueue: "You are already in the queue",
@@ -47,5 +49,7 @@ export const messages = {
     emptyQueue: "You can't sell since the queue is empty",
     alreadySelling: "You can't sell since you are already selling",
     createThread: (threadId: string) => `Created a thread <#${threadId}>`,
+    onCooldown: (msRemaining: number) =>
+      `You're on cooldown. You can start a new sale <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
   },
 };
