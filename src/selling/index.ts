@@ -47,6 +47,11 @@ export class Selling {
   deleteSale(sellerId: string) {
     this.sales = this.sales.filter((s) => s.seller.id !== sellerId);
     this.cooldowns[sellerId] = Date.now() + config.saleCooldownMs;
+
+    const now = Date.now();
+    for (const id of Object.keys(this.cooldowns)) {
+      if (this.cooldowns[id]! <= now) delete this.cooldowns[id];
+    }
   }
 
   getCooldownRemaining(sellerId: string): number {
