@@ -52,4 +52,5 @@ export const config = {
     pull: "<:pull:1460717649922097274>",
   },
   saleCooldownMs: 3 * 60 * 1000, // 3 minutes
+  pullCooldownMs: 3 * 60 * 1000, // 3 minutes
 };

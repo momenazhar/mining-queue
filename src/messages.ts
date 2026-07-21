@@ -39,6 +39,8 @@ export const messages = {
     noPullEmptyQueue: "You can't pull since the queue is empty",
     pulled: "Successfully pulled",
     cannotPull: "Only moderators or the seller can pull",
+    onCooldown: (msRemaining: number) =>
+      `You're pulling too fast. Try again <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
   },
   commands: {
     reset: "Reset!",

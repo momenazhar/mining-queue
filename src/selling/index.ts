@@ -15,11 +15,13 @@ export interface Sale {
 
 export class Selling {
   sales: Sale[];
-  cooldowns: Record<string, number>;
+  cooldowns: Record<string, number>; // sellerId -> cooldown after closing a sale
+  pullCooldowns: Record<string, number>; // sellerId -> cooldown between pulls
 
   constructor() {
     this.sales = [];
     this.cooldowns = {};
+    this.pullCooldowns = {};
   }
 
   containsSeller(sellerId: string) {
@@ -47,17 +49,31 @@ export class Selling {
   deleteSale(sellerId: string) {
     this.sales = this.sales.filter((s) => s.seller.id !== sellerId);
     this.cooldowns[sellerId] = Date.now() + config.saleCooldownMs;
-
-    const now = Date.now();
-    for (const id of Object.keys(this.cooldowns)) {
-      if (this.cooldowns[id]! <= now) delete this.cooldowns[id];
-    }
+    this.pruneExpired(this.cooldowns);
   }
 
   getCooldownRemaining(sellerId: string): number {
     const until = this.cooldowns[sellerId];
     if (!until) return 0;
     return Math.max(0, until - Date.now());
+  }
+
+  stampPullCooldown(sellerId: string) {
+    this.pullCooldowns[sellerId] = Date.now() + config.pullCooldownMs;
+    this.pruneExpired(this.pullCooldowns);
+  }
+
+  getPullCooldownRemaining(sellerId: string): number {
+    const until = this.pullCooldowns[sellerId];
+    if (!until) return 0;
+    return Math.max(0, until - Date.now());
+  }
+
+  private pruneExpired(cooldowns: Record<string, number>) {
+    const now = Date.now();
+    for (const id of Object.keys(cooldowns)) {
+      if (cooldowns[id]! <= now) delete cooldowns[id];
+    }
   }
 
   async read() {
@@ -68,6 +84,7 @@ export class Selling {
       const data = JSON.parse(contents || "{}");
       this.sales = data.sales ?? [];
       this.cooldowns = data.cooldowns ?? {};
+      this.pullCooldowns = data.pullCooldowns ?? {};
     } catch (error) {
       console.error("Failed to read selling. Creating new selling", error);
       await this.write();
@@ -76,7 +93,10 @@ export class Selling {
 
   async write() {
     await mkdir("./data", { recursive: true });
-    await writeFile("./data/selling.json", JSON.stringify({ sales: this.sales, cooldowns: this.cooldowns }));
+    await writeFile(
+      "./data/selling.json",
+      JSON.stringify({ sales: this.sales, cooldowns: this.cooldowns, pullCooldowns: this.pullCooldowns }),
+    );
   }
 }
 

@@ -6,7 +6,7 @@ import { queue } from "../queue/index.ts";
 import { updateQueueMessage } from "../queue/message.ts";
 import { embedReply } from "../embeds.ts";
 import { messages } from "../messages.ts";
-import { isSellerOrModerator } from "../selling/util.ts";
+import { isModerator, isSellerOrModerator } from "../selling/util.ts";
 
 export async function onPullQueueClick(interaction: ButtonInteraction<CacheType>) {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
@@ -23,6 +23,16 @@ export async function onPullQueueClick(interaction: ButtonInteraction<CacheType>
     return;
   }
 
+  const moderator = isModerator(interaction);
+
+  if (!moderator) {
+    const cooldown = selling.getPullCooldownRemaining(sale.seller.id);
+    if (cooldown > 0) {
+      await interaction.editReply(embedReply("error", messages.pullQueue.onCooldown(cooldown)));
+      return;
+    }
+  }
+
   if (queue.members.length === 0) {
     await interaction.editReply(embedReply("error", messages.pullQueue.noPullEmptyQueue));
     return;
@@ -32,14 +42,14 @@ export async function onPullQueueClick(interaction: ButtonInteraction<CacheType>
   const memberId = members[0]!.id;
   sale.memberIds.push(memberId);
 
+  if (!moderator) {
+    selling.stampPullCooldown(sale.seller.id);
+  }
+
   await selling.write();
   await queue.write();
 
-  await Promise.all([
-    addThreadMember(sale.threadId, memberId),
-    updateSaleMessage(sale),
-    updateQueueMessage(queue),
-  ]);
+  await Promise.all([addThreadMember(sale.threadId, memberId), updateSaleMessage(sale), updateQueueMessage(queue)]);
 
   await interaction.editReply(embedReply("info", messages.pullQueue.pulled));
 }
