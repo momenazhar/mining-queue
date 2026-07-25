@@ -11,8 +11,13 @@ import { config } from "../config.ts";
 import { selling } from "../selling/index.ts";
 import { embedReply } from "../embeds.ts";
 import { messages } from "../messages.ts";
+import { blacklist } from "../blacklist/index.ts";
 
 export async function onCreateSaleClick(interaction: ButtonInteraction<CacheType>) {
+  if (blacklist.contains(interaction.user.id)) {
+    return interaction.reply(embedReply("error", messages.createSale.blacklisted));
+  }
+
   if (queue.contains(interaction.user.id)) {
     return interaction.reply(embedReply("error", messages.createSale.cannotSellInQueue));
   }

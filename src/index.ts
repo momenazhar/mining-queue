@@ -24,6 +24,7 @@ import { onCloseSaleClick } from "./buttons/close-sale.ts";
 import { onPositionQueueClick } from "./buttons/position-queue.ts";
 import { onPullQueueClick } from "./buttons/pull-queue.ts";
 import { move } from "./commands/move.ts";
+import { blacklistCommand } from "./commands/blacklist.ts";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
@@ -52,6 +53,7 @@ const commands: Record<string, CommandHandler> = {
   [config.commands.sync.name]: sync,
   [config.commands.reset.name]: reset,
   [config.commands.move.name]: move,
+  [config.commands.blacklist.name]: blacklistCommand,
 };
 
 const modals: Record<string, ModalHandler> = {

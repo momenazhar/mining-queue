@@ -41,6 +41,39 @@ export const config = {
         },
       ],
     },
+    blacklist: {
+      name: "blacklist",
+      description: "Manage the sale-creation blacklist",
+      options: [
+        {
+          name: "add",
+          description: "Add a user to the blacklist",
+          type: ApplicationCommandOptionType.Subcommand,
+          options: [
+            { name: "user", type: ApplicationCommandOptionType.User, required: true, description: "User to blacklist" },
+            {
+              name: "reason",
+              type: ApplicationCommandOptionType.String,
+              required: false,
+              description: "Reason for blacklisting",
+            },
+          ],
+        },
+        {
+          name: "remove",
+          description: "Remove a user from the blacklist",
+          type: ApplicationCommandOptionType.Subcommand,
+          options: [
+            { name: "user", type: ApplicationCommandOptionType.User, required: true, description: "User to remove" },
+          ],
+        },
+        {
+          name: "list",
+          description: "View the blacklist",
+          type: ApplicationCommandOptionType.Subcommand,
+        },
+      ],
+    },
   },
   emojis: {
     leave: "<:leave:1459965259262726349>",

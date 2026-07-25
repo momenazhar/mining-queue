@@ -10,6 +10,7 @@ export const messages = {
     alreadySelling: "You can't sell since you are already selling",
     onCooldown: (msRemaining: number) =>
       `You're on cooldown. You can start a new sale <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
+    blacklisted: "You are blacklisted from creating sales",
   },
   joinQueue: {
     alreadyInQueue: "You are already in the queue",
@@ -42,6 +43,21 @@ export const messages = {
     onCooldown: (msRemaining: number) =>
       `You're pulling too fast. Try again <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
   },
+  blacklist: {
+    alreadyBlacklisted: "That user is already blacklisted",
+    notBlacklisted: "That user is not blacklisted",
+    added: (userId: string) => `Added <@${userId}> to the blacklist`,
+    removed: (userId: string) => `Removed <@${userId}> from the blacklist`,
+    list: (entries: { id: string; reason?: string; addedAt: number }[]) =>
+      entries.length === 0
+        ? "The blacklist is empty"
+        : entries
+            .map(
+              (entry) =>
+                `<@${entry.id}>${entry.reason ? ` — ${entry.reason}` : ""} (<t:${Math.round(entry.addedAt / 1000)}:d>)`,
+            )
+            .join("\n"),
+  },
   commands: {
     reset: "Reset!",
     sync: "Synced!",
@@ -53,5 +69,6 @@ export const messages = {
     createThread: (threadId: string) => `Created a thread <#${threadId}>`,
     onCooldown: (msRemaining: number) =>
       `You're on cooldown. You can start a new sale <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
+    blacklisted: "You are blacklisted from creating sales",
   },
 };
