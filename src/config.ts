@@ -47,10 +47,15 @@ export const config = {
       options: [
         {
           name: "add",
-          description: "Add a user to the blacklist",
+          description: "Add a user or role to the blacklist",
           type: ApplicationCommandOptionType.Subcommand,
           options: [
-            { name: "user", type: ApplicationCommandOptionType.User, required: true, description: "User to blacklist" },
+            {
+              name: "target",
+              type: ApplicationCommandOptionType.Mentionable,
+              required: true,
+              description: "User or role to blacklist",
+            },
             {
               name: "reason",
               type: ApplicationCommandOptionType.String,
@@ -61,10 +66,15 @@ export const config = {
         },
         {
           name: "remove",
-          description: "Remove a user from the blacklist",
+          description: "Remove a user or role from the blacklist",
           type: ApplicationCommandOptionType.Subcommand,
           options: [
-            { name: "user", type: ApplicationCommandOptionType.User, required: true, description: "User to remove" },
+            {
+              name: "target",
+              type: ApplicationCommandOptionType.Mentionable,
+              required: true,
+              description: "User or role to remove",
+            },
           ],
         },
         {

@@ -1,5 +1,5 @@
 import { MessageFlags, type CacheType, type ChatInputCommandInteraction } from "discord.js";
-import { blacklist } from "../blacklist/index.ts";
+import { blacklist, type BlacklistEntryType } from "../blacklist/index.ts";
 import { messages } from "../messages.ts";
 import { embedReply } from "../embeds.ts";
 
@@ -10,10 +10,12 @@ export async function blacklistCommand(interaction: ChatInputCommandInteraction<
 
   switch (subcommand) {
     case "add": {
-      const user = interaction.options.getUser("user", true);
+      const option = interaction.options.get("target", true);
+      const id = option.role?.id ?? option.user!.id;
+      const type: BlacklistEntryType = option.role ? "role" : "user";
       const reason = interaction.options.getString("reason", false) ?? undefined;
 
-      const added = blacklist.add(user.id, reason);
+      const added = blacklist.add(id, type, reason);
 
       if (!added) {
         await interaction.editReply(embedReply("error", messages.blacklist.alreadyBlacklisted));
@@ -21,20 +23,22 @@ export async function blacklistCommand(interaction: ChatInputCommandInteraction<
       }
 
       await blacklist.write();
-      await interaction.editReply(embedReply("info", messages.blacklist.added(user.id)));
+      await interaction.editReply(embedReply("info", messages.blacklist.added(id, type)));
       return;
     }
     case "remove": {
-      const user = interaction.options.getUser("user", true);
+      const option = interaction.options.get("target", true);
+      const id = option.role?.id ?? option.user!.id;
+      const entry = blacklist.entries.find((e) => e.id === id);
 
-      const removed = blacklist.remove(user.id);
-      if (!removed) {
+      if (!entry) {
         await interaction.editReply(embedReply("error", messages.blacklist.notBlacklisted));
         return;
       }
 
+      blacklist.remove(id);
       await blacklist.write();
-      await interaction.editReply(embedReply("info", messages.blacklist.removed(user.id)));
+      await interaction.editReply(embedReply("info", messages.blacklist.removed(entry.id, entry.type)));
       return;
     }
     case "list": {

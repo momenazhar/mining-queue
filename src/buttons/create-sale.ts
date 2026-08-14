@@ -12,9 +12,10 @@ import { selling } from "../selling/index.ts";
 import { embedReply } from "../embeds.ts";
 import { messages } from "../messages.ts";
 import { blacklist } from "../blacklist/index.ts";
+import { getMemberRoleIds } from "../util.ts";
 
 export async function onCreateSaleClick(interaction: ButtonInteraction<CacheType>) {
-  if (blacklist.contains(interaction.user.id)) {
+  if (blacklist.isBlacklisted(interaction.user.id, getMemberRoleIds(interaction))) {
     return interaction.reply(embedReply("error", messages.createSale.blacklisted));
   }
 

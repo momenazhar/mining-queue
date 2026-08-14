@@ -1,7 +1,10 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
+export type BlacklistEntryType = "user" | "role";
+
 export type BlacklistEntry = {
   id: string;
+  type: BlacklistEntryType;
   reason?: string;
   addedAt: number;
 };
@@ -18,13 +21,24 @@ export class Blacklist {
   }
 
   /**
-   * @returns whether the user was successfully added to the blacklist
+   * @returns whether the user is blacklisted, or one of their roles
    */
-  add(id: string, reason?: string) {
+  isBlacklisted(userId: string, roleIds: string[] = []): boolean {
+    return this.entries.some(
+      (entry) =>
+        (entry.type === "user" && entry.id === userId) || (entry.type === "role" && roleIds.includes(entry.id)),
+    );
+  }
+
+  /**
+   * @returns whether the id was successfully added to the blacklist
+   */
+  add(id: string, type: BlacklistEntryType, reason?: string) {
     if (this.contains(id)) return false;
 
     this.entries.push({
       id,
+      type,
       addedAt: Date.now(),
       ...(reason ? { reason } : {}),
     });
@@ -33,7 +47,7 @@ export class Blacklist {
   }
 
   /**
-   * @returns whether the user was successfully removed from the blacklist
+   * @returns whether the id was successfully removed from the blacklist
    */
   remove(id: string) {
     const lengthBefore = this.entries.length;

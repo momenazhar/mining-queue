@@ -7,11 +7,12 @@ import { updateSaleMessage } from "../selling/message.ts";
 import { messages } from "../messages.ts";
 import { embedReply } from "../embeds.ts";
 import { blacklist } from "../blacklist/index.ts";
+import { getMemberRoleIds } from "../util.ts";
 
 export async function onCreateSaleSubmit(interaction: ModalSubmitInteraction<CacheType>) {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-  if (blacklist.contains(interaction.user.id)) {
+  if (blacklist.isBlacklisted(interaction.user.id, getMemberRoleIds(interaction))) {
     await interaction.reply(embedReply("error", messages.modals.blacklisted));
     return;
   }

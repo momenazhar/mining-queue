@@ -1,3 +1,5 @@
+import type { BlacklistEntryType } from "./blacklist/index.ts";
+
 export const messages = {
   closeSale: {
     threadNoSale: "This thread is not assiocated with a sale",
@@ -44,17 +46,21 @@ export const messages = {
       `You're pulling too fast. Try again <t:${Math.round((Date.now() + msRemaining) / 1000)}:R>`,
   },
   blacklist: {
-    alreadyBlacklisted: "That user is already blacklisted",
-    notBlacklisted: "That user is not blacklisted",
-    added: (userId: string) => `Added <@${userId}> to the blacklist`,
-    removed: (userId: string) => `Removed <@${userId}> from the blacklist`,
-    list: (entries: { id: string; reason?: string; addedAt: number }[]) =>
+    alreadyBlacklisted: "That user or role is already blacklisted",
+    notBlacklisted: "That user or role is not blacklisted",
+    added: (id: string, type: BlacklistEntryType) =>
+      `Added ${type === "role" ? `<@&${id}>` : `<@${id}>`} to the blacklist`,
+    removed: (id: string, type: BlacklistEntryType) =>
+      `Removed ${type === "role" ? `<@&${id}>` : `<@${id}>`} from the blacklist`,
+    list: (entries: { id: string; type: BlacklistEntryType; reason?: string; addedAt: number }[]) =>
       entries.length === 0
         ? "The blacklist is empty"
         : entries
             .map(
               (entry) =>
-                `<@${entry.id}>${entry.reason ? ` — ${entry.reason}` : ""} (<t:${Math.round(entry.addedAt / 1000)}:d>)`,
+                `${entry.type === "role" ? `<@&${entry.id}>` : `<@${entry.id}>`}${
+                  entry.reason ? ` — ${entry.reason}` : ""
+                } (<t:${Math.round(entry.addedAt / 1000)}:d>)`,
             )
             .join("\n"),
   },
