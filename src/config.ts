@@ -106,8 +106,8 @@ export const config = {
     sell: "<:sell:1460714493893017795>",
     position: "<:position:1460715206522175610>",
     pull: "<:pull:1460717649922097274>",
-    fiesta: "<:fiesta:1472260135714951209>",
-    br: "<:br:1358503376379449586>",
+    fiesta: "<:fiesta:1544058173772533800>",
+    br: "<:br:1544058199622164680>",
   },
   saleCooldownMs: 3 * 60 * 1000, // 3 minutes
   pullCooldownMs: 3 * 60 * 1000, // 3 minutes
