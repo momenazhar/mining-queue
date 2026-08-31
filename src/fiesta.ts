@@ -3,7 +3,6 @@ export const YEAR_DURATION = 446400000; // 5 SB days * 20min = 5d 4h
 export const MONTH_DURATION = 37200000; // 31 SB days * 20 minutes
 const DAY_DURATION = 20 * 60 * 1000; // 1 SB day = 20 real life minutes
 
-const FIESTA_START_OFFSET = 0.75 * DAY_DURATION; // Fiesta starts at 6pm SB time (18/24 of a day)
 const FIESTA_DURATION = 7 * DAY_DURATION; // Each Fiesta lasts 7 SB days (2h 20m)
 
 export type FiestaSeason = {
@@ -40,7 +39,7 @@ export function getFiestas(year: number): Fiesta[] {
 
   return FIESTA_SEASONS.map((season) => {
     const monthStart = yearStart + (season.month - 1) * MONTH_DURATION;
-    const start = monthStart + FIESTA_START_OFFSET;
+    const start = monthStart;
 
     return {
       ...season,
