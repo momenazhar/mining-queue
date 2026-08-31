@@ -25,6 +25,7 @@ import { onPositionQueueClick } from "./buttons/position-queue.ts";
 import { onPullQueueClick } from "./buttons/pull-queue.ts";
 import { move } from "./commands/move.ts";
 import { blacklistCommand } from "./commands/blacklist.ts";
+import { fiesta } from "./commands/fiesta.ts";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
@@ -54,6 +55,7 @@ const commands: Record<string, CommandHandler> = {
   [config.commands.reset.name]: reset,
   [config.commands.move.name]: move,
   [config.commands.blacklist.name]: blacklistCommand,
+  [config.commands.fiesta.name]: fiesta,
 };
 
 const modals: Record<string, ModalHandler> = {

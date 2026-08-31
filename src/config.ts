@@ -84,6 +84,19 @@ export const config = {
         },
       ],
     },
+    fiesta: {
+      name: "fiesta",
+      description: "Calculate Mining Fiesta times for a SkyBlock year",
+      options: [
+        {
+          name: "year",
+          type: ApplicationCommandOptionType.Integer,
+          required: false,
+          description: "The SkyBlock year to calculate the times for (defaults to current year)",
+          minValue: 1,
+        },
+      ],
+    },
   },
   emojis: {
     leave: "<:leave:1459965259262726349>",
@@ -93,6 +106,8 @@ export const config = {
     sell: "<:sell:1460714493893017795>",
     position: "<:position:1460715206522175610>",
     pull: "<:pull:1460717649922097274>",
+    fiesta: "<:fiesta:1472260135714951209>",
+    br: "<:br:1358503376379449586>",
   },
   saleCooldownMs: 3 * 60 * 1000, // 3 minutes
   pullCooldownMs: 3 * 60 * 1000, // 3 minutes
