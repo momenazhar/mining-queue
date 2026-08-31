@@ -33,7 +33,7 @@ export async function fiesta(interaction: ChatInputCommandInteraction<CacheType>
 
   const component = new ContainerBuilder()
     .addTextDisplayComponents((textDisplay) =>
-      textDisplay.setContent(`# ${config.emojis.fiesta} Mining Fiesta Times`).setId(2),
+      textDisplay.setContent(`# ${config.emojis.fiesta} Calculated Mining Fiesta times for Year ${year}`).setId(2),
     )
     .addSeparatorComponents((separator) => separator.setDivider(true).setSpacing(SeparatorSpacingSize.Small).setId(3))
     .addTextDisplayComponents((textDisplay) => textDisplay.setContent(lines.join("\n")).setId(4))
