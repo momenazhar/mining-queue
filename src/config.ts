@@ -1,114 +1,11 @@
-import { ApplicationCommandOptionType } from "discord.js";
-
 export const config = {
-  modals: {
-    createSaleId: "create-sale",
-  },
-  buttons: {
-    queueJoinId: "queue-join",
-    queueLeaveId: "queue-leave",
-    queuePositionId: "queue-position",
-    createSaleId: "create-sale",
-    closeSaleId: "close-sale",
-    leaveSaleId: "leave-sale",
-    pullQueueId: "pull-queue",
-  },
   commands: {
-    sync: {
-      name: "sync",
-      description: "Refresh the bot's interactions, and re-send the queue message if it was deleted",
-    },
-    reset: {
-      name: "reset",
-      description: "Remove everyone from the queue",
-    },
-    move: {
-      name: "move",
-      description: "Move a person to a different position in the queue",
-      options: [
-        {
-          name: "user",
-          type: ApplicationCommandOptionType.User,
-          required: true,
-          description: "User to move",
-        },
-        {
-          name: "position",
-          type: ApplicationCommandOptionType.Integer,
-          required: true,
-          description: "New position to move to",
-          minValue: 1,
-        },
-      ],
-    },
-    blacklist: {
-      name: "blacklist",
-      description: "Manage the sale-creation blacklist",
-      options: [
-        {
-          name: "add",
-          description: "Add a user or role to the blacklist",
-          type: ApplicationCommandOptionType.Subcommand,
-          options: [
-            {
-              name: "target",
-              type: ApplicationCommandOptionType.Mentionable,
-              required: true,
-              description: "User or role to blacklist",
-            },
-            {
-              name: "reason",
-              type: ApplicationCommandOptionType.String,
-              required: false,
-              description: "Reason for blacklisting",
-            },
-          ],
-        },
-        {
-          name: "remove",
-          description: "Remove a user or role from the blacklist",
-          type: ApplicationCommandOptionType.Subcommand,
-          options: [
-            {
-              name: "target",
-              type: ApplicationCommandOptionType.Mentionable,
-              required: true,
-              description: "User or role to remove",
-            },
-          ],
-        },
-        {
-          name: "list",
-          description: "View the blacklist",
-          type: ApplicationCommandOptionType.Subcommand,
-        },
-      ],
-    },
     fiesta: {
       name: "fiesta",
-      description: "Calculate Mining Fiesta times for a SkyBlock year",
-      options: [
-        {
-          name: "year",
-          type: ApplicationCommandOptionType.Integer,
-          required: false,
-          description: "The SkyBlock year to calculate the times for (defaults to current year)",
-          minValue: 1,
-        },
-      ],
+      description: "(Useless Command) Information about Mining Fiesta times",
     },
   },
   emojis: {
-    leave: "<:leave:1459965259262726349>",
-    close: "<:close:1459965258054631746>",
-    gdrag: "<:gdrag:1460709351424524409>",
-    join: "<:join:1460714492412559475>",
-    sell: "<:sell:1460714493893017795>",
-    position: "<:position:1460715206522175610>",
-    pull: "<:pull:1460717649922097274>",
     fiesta: "<:fiesta:1544058173772533800>",
-    br: "<:br:1544058199622164680>",
   },
-  saleCooldownMs: 3 * 60 * 1000, // 3 minutes
-  pullCooldownMs: 3 * 60 * 1000, // 3 minutes
 };
